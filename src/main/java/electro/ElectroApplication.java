@@ -9,6 +9,7 @@ public class ElectroApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ElectroApplication.class, args);
+		//
 	}
 
 }
