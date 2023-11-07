@@ -1,7 +1,7 @@
 package electro.controller;
 
-import electro.model.User;
 import electro.model.userDto.UserDto;
+import electro.service.UserPortfolioResponse;
 import electro.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public String loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
+    public UserPortfolioResponse loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
         return userService.loginUser(userDto);
     }
 }
