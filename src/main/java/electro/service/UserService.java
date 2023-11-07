@@ -45,4 +45,34 @@ public class UserService {
                 .inviteCode(savedUser.getInviteCode()).build();
         return build;
     }
+
+    // login user
+//    public String loginUser(UserDto userDto){
+//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
+//        Optional<User> existingPassword = userRepository.findByPassword(userDto.getPassword());
+//        System.out.println(existingPassword);
+//        if(existingUser.isPresent()&& existingPassword.isPresent()){
+//            return "User is present login successful";
+//        } else if (existingUser.isPresent() && !existingPassword.isPresent()) {
+//            return "incorrect password";
+//
+//        }else {
+//            return "Create account";
+//
+//        }
+//    }
+
+    public String loginUser(UserDto userDto) {
+        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
+
+        if (existingUser.isPresent() && existingUser.get().getPassword().equals(userDto.getPassword())) {
+            return "User is present, login successful";
+        } else if (existingUser.isPresent()) {
+            return "Incorrect password";
+        } else {
+            return "Create account";
+        }
+    }
+
+
 }

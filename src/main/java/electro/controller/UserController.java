@@ -26,5 +26,9 @@ public class UserController {
             return new ResponseEntity<>("User added successfully", HttpStatus.CREATED);
         }
     }
+    @PostMapping("/login")
+    public String loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
+        return userService.loginUser(userDto);
+    }
 }
 
