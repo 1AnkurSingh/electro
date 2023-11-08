@@ -48,9 +48,10 @@ public class PortfolioController {
         Portfolio portfolio = new Portfolio();
         portfolio.setUser(user);
         portfolio.setTotalAssets(request.getTotalAssets());
-        portfolio.setTotalIncome(request.getTotalIncome());
+        portfolio.setTotalIncome(request.getTeamIncome());
         portfolio.setTodaysIncome(request.getTodaysIncome());
-        portfolio.setTotalExpenses(request.getTotalExpenses());
+        portfolio.setTotalIncome(request.getTotalIncome());
+        portfolio.setCurrentBalance(request.getCurrentBalance());
 
         return portfolioRepository.save(portfolio);
     }

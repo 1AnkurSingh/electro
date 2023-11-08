@@ -50,9 +50,10 @@ public class UserService {
             Portfolio portfolio = new Portfolio();
             portfolio.setUser(savedUser);
             portfolio.setTotalAssets(BigDecimal.ZERO);
-            portfolio.setTotalIncome(BigDecimal.ZERO);
+            portfolio.setTeamIncome(BigDecimal.ZERO);
             portfolio.setTodaysIncome(BigDecimal.ZERO);
-            portfolio.setTotalExpenses(BigDecimal.ZERO);
+            portfolio.setTotalIncome(BigDecimal.ZERO);
+            portfolio.setCurrentBalance(BigDecimal.ZERO);
 
             portfolioRepository.save(portfolio);
 

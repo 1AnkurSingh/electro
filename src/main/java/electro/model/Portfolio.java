@@ -21,12 +21,17 @@ public class Portfolio {
     @Column(name = "total_assets")
     private BigDecimal totalAssets;
 
-    @Column(name = "total_income")
-    private BigDecimal totalIncome;
+    @Column(name = "team_income")
+    private BigDecimal teamIncome;
 
     @Column(name = "todays_income")
     private BigDecimal todaysIncome;
 
-    @Column(name = "total_expenses")
-    private BigDecimal totalExpenses;
+    @Column(name = "total_income")
+    private BigDecimal totalIncome;
+
+
+
+    @Column(name = "current_balance")
+    private BigDecimal currentBalance;
 }
