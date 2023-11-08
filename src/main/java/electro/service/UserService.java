@@ -54,6 +54,7 @@ public class UserService {
             portfolio.setTodaysIncome(BigDecimal.ZERO);
             portfolio.setTotalIncome(BigDecimal.ZERO);
             portfolio.setCurrentBalance(BigDecimal.ZERO);
+            //
 
             portfolioRepository.save(portfolio);
 
