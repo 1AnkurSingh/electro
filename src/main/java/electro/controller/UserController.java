@@ -1,5 +1,6 @@
 package electro.controller;
 
+import electro.model.User;
 import electro.model.userDto.UserDto;
 import electro.service.UserPortfolioResponse;
 import electro.service.UserService;
@@ -8,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/user")
 @CrossOrigin("*")
@@ -15,6 +18,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+
 
     // Add User
     @PostMapping("/add")
@@ -30,6 +35,21 @@ public class UserController {
     public UserPortfolioResponse loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
         return userService.loginUser(userDto);
         //
+
+
     }
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+        @GetMapping("/getBonus")
+            public ResponseEntity<String>getBonus(){
+            String bonus = userService.getBonus();
+            return new ResponseEntity<>(bonus,HttpStatus.OK);
+        }
+
+
 }
 

@@ -1,8 +1,10 @@
 package electro.service;
 
+import electro.model.BonusTransaction;
 import electro.model.Portfolio;
 import electro.model.User;
 import electro.model.userDto.UserDto;
+import electro.repository.BonusTransactionRepository;
 import electro.repository.PortfolioRepository;
 import electro.repository.UserRepository;
 import lombok.Builder;
@@ -10,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +26,13 @@ public class UserService {
 
     @Autowired
     PortfolioRepository portfolioRepository;
+
+    @Autowired
+    BonusTransactionRepository bonusTransactionRepository;
+
+
+    private static LocalDate lastClaimDate = null;
+    private static boolean bonusClaimed = false;
 
 //    public UserDto  addSingleUser( UserDto userDto){
 //        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
@@ -156,7 +168,49 @@ private  User dtoToEntity(UserDto userDto){
         }
     }
 
+    // Method to retrieve all users from the database
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+    public String getBonus() {
+        LocalDate today = LocalDate.now();
+
+        // Check if it's a new day
+        if (lastClaimDate == null || !lastClaimDate.equals(today)) {
+            lastClaimDate = today;
+            bonusClaimed = false; // Reset bonusClaimed flag for a new day
+        }
+
+        // Check if bonus has not been claimed yet today
+        if (!bonusClaimed) {
+            bonusClaimed = true;
+
+            // Check if there is an existing transaction for today
+            BonusTransaction existingTransaction = bonusTransactionRepository.findFirstByOrderByIdDesc();
+
+            if (existingTransaction == null) {
+                // If no existing transaction, create a new one
+                BonusTransaction bonusTransaction = new BonusTransaction();
+                bonusTransaction.setTransactionTime(LocalDateTime.now());
+                bonusTransaction.setAmount(2);
+                bonusTransactionRepository.save(bonusTransaction);
+
+                return "You have received a bonus of 2 rupees.";
+            } else {
+                // If an existing transaction is found, update the amount
+                existingTransaction.setAmount(existingTransaction.getAmount() + 2);
+                bonusTransactionRepository.save(existingTransaction);
+
+                return "You have received a bonus of 2 rupees. Total bonus: " + existingTransaction.getAmount() + " rupees.";
+            }
+        } else {
+            return "You have already collected the bonus of 2 rupees today.";
+        }
+    }
+    }
 
 
 
-}
+
+
+
