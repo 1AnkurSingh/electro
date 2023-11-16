@@ -15,7 +15,25 @@ public class PortfolioService {
         return portfolioRepository.findByUserId(userId);
     }
 
-//    public Portfolio addPortfolio(){
-//
-//    }
+
+    public Portfolio updatePortfolio(int id, Portfolio updatedPortfolio) {
+        Portfolio existingPortfolio = portfolioRepository.findById(id).orElse(null);
+
+        if (existingPortfolio == null) {
+            return null;
+        }
+
+        // Update the fields you want to allow being updated
+        existingPortfolio.setTotalAssets(updatedPortfolio.getTotalAssets());
+        existingPortfolio.setTeamIncome(updatedPortfolio.getTeamIncome());
+        existingPortfolio.setTodaysIncome(updatedPortfolio.getTodaysIncome());
+        existingPortfolio.setTotalIncome(updatedPortfolio.getTotalIncome());
+        existingPortfolio.setCurrentBalance(updatedPortfolio.getCurrentBalance());
+        existingPortfolio.setReferralStatus(updatedPortfolio.getReferralStatus());
+        existingPortfolio.setBonus(updatedPortfolio.getBonus());
+
+        // Save the updated portfolio
+        return portfolioRepository.save(existingPortfolio);
+    }
+
 }

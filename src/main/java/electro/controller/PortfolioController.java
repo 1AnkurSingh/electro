@@ -55,4 +55,13 @@ public class PortfolioController {
 
         return portfolioRepository.save(portfolio);
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Portfolio> updatePortfolio(@PathVariable int id, @RequestBody Portfolio updatedPortfolio) {
+        Portfolio updated = portfolioService.updatePortfolio(id, updatedPortfolio);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(updated);
+    }
 }
