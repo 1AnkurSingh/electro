@@ -10,6 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/portfolio")
 public class PortfolioController {
@@ -56,12 +59,61 @@ public class PortfolioController {
         return portfolioRepository.save(portfolio);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Portfolio> updatePortfolio(@PathVariable int id, @RequestBody Portfolio updatedPortfolio) {
-        Portfolio updated = portfolioService.updatePortfolio(id, updatedPortfolio);
-        if (updated == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(updated);
+//    @PatchMapping ("/{id}")
+//    public ResponseEntity<Portfolio> updatePortfolio(@PathVariable int id, @RequestBody Portfolio updatedPortfolio) {
+//        Portfolio updated = portfolioService.updatePortfolio(id, updatedPortfolio);
+//        if (updated == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(updated);
+//    }
+@PatchMapping("/{id}")
+public ResponseEntity<Portfolio> updatePortfolio(@PathVariable int id, @RequestBody Map<String, Object> updates) {
+    Portfolio updated = portfolioService.partialUpdatePortfolio(id, updates);
+    if (updated == null) {
+        return ResponseEntity.notFound().build();
     }
+    return ResponseEntity.ok(updated);
+}
+
+    public Portfolio partialUpdatePortfolio(int id, Map<String, Object> updates) {
+        Portfolio existingPortfolio = portfolioRepository.findById(id).orElse(null);
+
+        if (existingPortfolio == null) {
+            return null;
+        }
+
+        // Update only the specified fields
+        if (updates.containsKey("totalAssets")) {
+            existingPortfolio.setTotalAssets((BigDecimal) updates.get("totalAssets"));
+        }
+
+        if (updates.containsKey("teamIncome")) {
+            existingPortfolio.setTeamIncome((BigDecimal) updates.get("teamIncome"));
+        }
+
+        if (updates.containsKey("todaysIncome")) {
+            existingPortfolio.setTodaysIncome((BigDecimal) updates.get("todaysIncome"));
+        }
+
+        if (updates.containsKey("totalIncome")) {
+            existingPortfolio.setTotalIncome((BigDecimal) updates.get("totalIncome"));
+        }
+
+        if (updates.containsKey("currentBalance")) {
+            existingPortfolio.setCurrentBalance((BigDecimal) updates.get("currentBalance"));
+        }
+
+        if (updates.containsKey("referralStatus")) {
+            existingPortfolio.setReferralStatus((String) updates.get("referralStatus"));
+        }
+
+        if (updates.containsKey("bonus")) {
+            existingPortfolio.setBonus((int) updates.get("bonus"));
+        }
+
+        // Save the updated portfolio
+        return portfolioRepository.save(existingPortfolio);
+    }
+
 }
