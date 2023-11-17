@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -52,13 +53,27 @@ public class UserService {
 
     public UserDto addSingleUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
+        User inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
+
         if (existingUser.isPresent()) {
             return null;
         } else {
             User user = dtoToEntity(userDto);
             User savedUser = userRepository.save(user);
 
-            // Create a blank Portfolio for the user
+            // Update referral status for all users with the given ID
+            int userId = inviteCode.getId();
+            List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
+
+            for (User existingReferralUser : referralUsers) {
+                Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
+                if (existingReferralPortfolio != null) {
+                    existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+                    portfolioRepository.save(existingReferralPortfolio);
+                }
+            }
+
+            // Create a blank Portfolio for the new user
             Portfolio portfolio = new Portfolio();
             portfolio.setUser(savedUser);
             portfolio.setTotalAssets(BigDecimal.ZERO);
@@ -66,10 +81,8 @@ public class UserService {
             portfolio.setTodaysIncome(BigDecimal.ZERO);
             portfolio.setTotalIncome(BigDecimal.ZERO);
             portfolio.setCurrentBalance(BigDecimal.ZERO);
-
-            portfolio.setReferralStatus("No Referral Found");
+            portfolio.setReferralStatus("Referral Found"); // Set Referral Found for the new user
             portfolio.setBonus(0);
-
 
             portfolioRepository.save(portfolio);
 
@@ -83,7 +96,10 @@ public class UserService {
 
 
 
-private  User dtoToEntity(UserDto userDto){
+
+
+
+    private  User dtoToEntity(UserDto userDto){
         User user=User.builder()
                 .phoneNumber(userDto.getPhoneNumber())
                 .password(userDto.getPassword())
