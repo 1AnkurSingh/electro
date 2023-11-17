@@ -51,6 +51,45 @@ public class UserService {
 //
 //    }
 
+//    public UserDto addSingleUser(UserDto userDto) {
+//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
+//        User inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
+//
+//        if (existingUser.isPresent()) {
+//            return null;
+//        } else {
+//            User user = dtoToEntity(userDto);
+//            User savedUser = userRepository.save(user);
+//
+//            // Update referral status for all users with the given ID
+//            int userId = inviteCode.getId();
+//            List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
+//
+//            for (User existingReferralUser : referralUsers) {
+//                Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
+//                if (existingReferralPortfolio != null) {
+//                    existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+//                    portfolioRepository.save(existingReferralPortfolio);
+//                }
+//            }
+//
+//            // Create a blank Portfolio for the new user
+//            Portfolio portfolio = new Portfolio();
+//            portfolio.setUser(savedUser);
+//            portfolio.setTotalAssets(BigDecimal.ZERO);
+//            portfolio.setTeamIncome(BigDecimal.ZERO);
+//            portfolio.setTodaysIncome(BigDecimal.ZERO);
+//            portfolio.setTotalIncome(BigDecimal.ZERO);
+//            portfolio.setCurrentBalance(BigDecimal.ZERO);
+//            portfolio.setReferralStatus("Referral Found"); // Set Referral Found for the new user
+//            portfolio.setBonus(0);
+//
+//            portfolioRepository.save(portfolio);
+//
+//            return entityToDto(savedUser);
+//        }
+//    }
+
     public UserDto addSingleUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
         User inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
@@ -68,7 +107,13 @@ public class UserService {
             for (User existingReferralUser : referralUsers) {
                 Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
                 if (existingReferralPortfolio != null) {
-                    existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+                    String existingReferralStatus = existingReferralPortfolio.getReferralStatus();
+                    if (existingReferralStatus == null || existingReferralStatus.isEmpty()) {
+                        existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+                    } else {
+                        // Append the new referral number to the existing ones
+                        existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
+                    }
                     portfolioRepository.save(existingReferralPortfolio);
                 }
             }
@@ -89,6 +134,7 @@ public class UserService {
             return entityToDto(savedUser);
         }
     }
+
 
 
 
