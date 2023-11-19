@@ -92,7 +92,11 @@ public class UserService {
 
     public UserDto addSingleUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-        User inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
+        User inviteCode = null;
+
+        if (userDto.getInviteCode() != null) {
+            inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
+        }
 
         if (existingUser.isPresent()) {
             return null;
@@ -100,21 +104,23 @@ public class UserService {
             User user = dtoToEntity(userDto);
             User savedUser = userRepository.save(user);
 
-            // Update referral status for all users with the given ID
-            int userId = inviteCode.getId();
-            List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
+            if (inviteCode != null) {
+                // Update referral status for all users with the given ID
+                int userId = inviteCode.getId();
+                List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
 
-            for (User existingReferralUser : referralUsers) {
-                Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
-                if (existingReferralPortfolio != null) {
-                    String existingReferralStatus = existingReferralPortfolio.getReferralStatus();
-                    if (existingReferralStatus == null || existingReferralStatus.isEmpty()) {
-                        existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
-                    } else {
-                        // Append the new referral number to the existing ones
-                        existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
+                for (User existingReferralUser : referralUsers) {
+                    Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
+                    if (existingReferralPortfolio != null) {
+                        String existingReferralStatus = existingReferralPortfolio.getReferralStatus();
+                        if (existingReferralStatus == null || existingReferralStatus.isEmpty()) {
+                            existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+                        } else {
+                            // Append the new referral number to the existing ones
+                            existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
+                        }
+                        portfolioRepository.save(existingReferralPortfolio);
                     }
-                    portfolioRepository.save(existingReferralPortfolio);
                 }
             }
 
@@ -133,6 +139,8 @@ public class UserService {
 
             return entityToDto(savedUser);
         }
+
+
     }
 
 
