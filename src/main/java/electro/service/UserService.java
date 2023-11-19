@@ -132,7 +132,7 @@ public class UserService {
             portfolio.setTodaysIncome(BigDecimal.ZERO);
             portfolio.setTotalIncome(BigDecimal.ZERO);
             portfolio.setCurrentBalance(BigDecimal.ZERO);
-            portfolio.setReferralStatus("Referral Found"); // Set Referral Found for the new user
+            portfolio.setReferralStatus("No Referral Found"); // Set Referral Found for the new user
             portfolio.setBonus(0);
 
             portfolioRepository.save(portfolio);
