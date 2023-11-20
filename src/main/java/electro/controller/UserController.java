@@ -32,7 +32,7 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public UserPortfolioResponse loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
+    public String  loginUser(@RequestBody UserDto userDto , @RequestParam(required = false) String inviteCode) {
         return userService.loginUser(userDto);
         //
 

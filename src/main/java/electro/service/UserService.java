@@ -220,7 +220,7 @@ public class UserService {
 //        }
 //    }
 
-    public UserPortfolioResponse loginUser(UserDto userDto) {
+    public String loginUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
 
         if (existingUser.isPresent() && existingUser.get().getPassword().equals(userDto.getPassword())) {
@@ -228,16 +228,19 @@ public class UserService {
             Portfolio portfolio = portfolioRepository.findByUserId(id);
 
             if (portfolio != null) {
-                UserPortfolioResponse response = new UserPortfolioResponse("User is present, login successful");
-                response.setPortfolio(portfolio); // Set the portfolio in the response
-                return response;
+//                UserPortfolioResponse response = new UserPortfolioResponse("User is present, login successful");
+//                response.setPortfolio(portfolio); // Set the portfolio in the response
+                return "User is present, login successful";
             } else {
-                return new UserPortfolioResponse("User is present, but no portfolio found");
+//                return new UserPortfolioResponse("User is present, but no portfolio found");
+                return "User is present, but no portfolio found";
             }
         } else if (existingUser.isPresent()) {
-            return new UserPortfolioResponse("Incorrect password");
+//            return new UserPortfolioResponse("Incorrect password");
+             return "Incorrect password";
         } else {
-            return new UserPortfolioResponse("Create an account");
+//            return new UserPortfolioResponse("Create an account");
+            return "Create an account";
         }
     }
 
