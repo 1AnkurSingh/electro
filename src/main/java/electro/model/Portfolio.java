@@ -40,5 +40,4 @@ public class Portfolio {
 
     @Column(name = "bonus")
     private int bonus;
-
 }
