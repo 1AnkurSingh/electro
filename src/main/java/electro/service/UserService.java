@@ -113,11 +113,12 @@ public class UserService {
                     Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
                     if (existingReferralPortfolio != null) {
                         String existingReferralStatus = existingReferralPortfolio.getReferralStatus();
-                        if (existingReferralStatus == null || existingReferralStatus.isEmpty()) {
+                        if ("No Referral Found".equals(existingReferralStatus)) {
+                            // Step 1: If existingReferralStatus is "No Referral Found", set it to userDto.getPhoneNumber()
                             existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
                         } else {
-                            // Replace the existing referral number with the new one
-                            existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
+                            // Step 2: If existingReferralStatus is not "No Referral Found", append userDto.getPhoneNumber() to it
+                            existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
                         }
                         portfolioRepository.save(existingReferralPortfolio);
                     }
