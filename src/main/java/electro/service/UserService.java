@@ -101,24 +101,25 @@ public class UserService {
                 .build();
     }
 
-    public String loginUser(UserDto userDto) {
+    public LoginResponse loginUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
 
         if (existingUser.isPresent() && existingUser.get().getPassword().equals(userDto.getPassword())) {
-            int id = existingUser.get().getId();
-            Portfolio portfolio = portfolioRepository.findByUserId(id);
+            int userId = existingUser.get().getId();
+            Portfolio portfolio = portfolioRepository.findByUserId(userId);
 
             if (portfolio != null) {
-                return "User is present, login successful";
+                return new LoginResponse("User is present, login successful", userId);
             } else {
-                return "User is present, but no portfolio found";
+                return null;
             }
         } else if (existingUser.isPresent()) {
-            return "Incorrect password";
+            return new LoginResponse("Incorrect password", null);
         } else {
-            return "Create an account";
+            return new LoginResponse("Create an account", null);
         }
     }
+
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
