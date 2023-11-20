@@ -31,64 +31,8 @@ public class UserService {
     @Autowired
     BonusTransactionRepository bonusTransactionRepository;
 
-
     private static LocalDate lastClaimDate = null;
     private static boolean bonusClaimed = false;
-
-//    public UserDto  addSingleUser( UserDto userDto){
-//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-//        if(existingUser.isPresent()){
-//        return null;
-//
-//
-//    }else
-//        {
-//            User user = dtoToEntity(userDto);
-//            User save1 = userRepository.save(user);
-//
-//            return entityToDto(save1);
-//        }
-//
-//    }
-
-//    public UserDto addSingleUser(UserDto userDto) {
-//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-//        User inviteCode = userRepository.findByRandom5DiditNumber(Integer.parseInt(userDto.getInviteCode()));
-//
-//        if (existingUser.isPresent()) {
-//            return null;
-//        } else {
-//            User user = dtoToEntity(userDto);
-//            User savedUser = userRepository.save(user);
-//
-//            // Update referral status for all users with the given ID
-//            int userId = inviteCode.getId();
-//            List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
-//
-//            for (User existingReferralUser : referralUsers) {
-//                Portfolio existingReferralPortfolio = portfolioRepository.findByUser(existingReferralUser);
-//                if (existingReferralPortfolio != null) {
-//                    existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
-//                    portfolioRepository.save(existingReferralPortfolio);
-//                }
-//            }
-//
-//            // Create a blank Portfolio for the new user
-//            Portfolio portfolio = new Portfolio();
-//            portfolio.setUser(savedUser);
-//            portfolio.setTotalAssets(BigDecimal.ZERO);
-//            portfolio.setTeamIncome(BigDecimal.ZERO);
-//            portfolio.setTodaysIncome(BigDecimal.ZERO);
-//            portfolio.setTotalIncome(BigDecimal.ZERO);
-//            portfolio.setCurrentBalance(BigDecimal.ZERO);
-//            portfolio.setReferralStatus("Referral Found"); // Set Referral Found for the new user
-//            portfolio.setBonus(0);
-//
-//            portfolioRepository.save(portfolio);
-//
-//            return entityToDto(savedUser);
-//        }
-//    }
 
     public UserDto addSingleUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
@@ -105,7 +49,6 @@ public class UserService {
             User savedUser = userRepository.save(user);
 
             if (inviteCode != null) {
-                // Update referral status for all users with the given ID
                 int userId = inviteCode.getId();
                 List<User> referralUsers = userRepository.findAllById(Collections.singleton(userId));
 
@@ -114,10 +57,8 @@ public class UserService {
                     if (existingReferralPortfolio != null) {
                         String existingReferralStatus = existingReferralPortfolio.getReferralStatus();
                         if ("No Referral Found".equals(existingReferralStatus)) {
-                            // Step 1: If existingReferralStatus is "No Referral Found", set it to userDto.getPhoneNumber()
                             existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
                         } else {
-                            // Step 2: If existingReferralStatus is not "No Referral Found", append userDto.getPhoneNumber() to it
                             existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
                         }
                         portfolioRepository.save(existingReferralPortfolio);
@@ -125,101 +66,40 @@ public class UserService {
                 }
             }
 
-            // Create a blank Portfolio for the new user
             Portfolio portfolio = new Portfolio();
             portfolio.setUser(savedUser);
-            portfolio.setTotalAssets(BigDecimal.ZERO);
-            portfolio.setTeamIncome(BigDecimal.ZERO);
-            portfolio.setTodaysIncome(BigDecimal.ZERO);
-            portfolio.setTotalIncome(BigDecimal.ZERO);
-            portfolio.setCurrentBalance(BigDecimal.ZERO);
-            portfolio.setReferralStatus("No Referral Found"); // Set Referral Found for the new user
-            portfolio.setBonus(0);
-
+            initializePortfolio(portfolio);
             portfolioRepository.save(portfolio);
 
             return entityToDto(savedUser);
         }
-
-
     }
 
+    private void initializePortfolio(Portfolio portfolio) {
+        portfolio.setTotalAssets(BigDecimal.ZERO);
+        portfolio.setTeamIncome(BigDecimal.ZERO);
+        portfolio.setTodaysIncome(BigDecimal.ZERO);
+        portfolio.setTotalIncome(BigDecimal.ZERO);
+        portfolio.setCurrentBalance(BigDecimal.ZERO);
+        portfolio.setReferralStatus("No Referral Found");
+        portfolio.setBonus(0);
+    }
 
-
-
-
-
-
-
-
-
-
-    private  User dtoToEntity(UserDto userDto){
-        User user=User.builder()
+    private User dtoToEntity(UserDto userDto) {
+        return User.builder()
                 .phoneNumber(userDto.getPhoneNumber())
                 .password(userDto.getPassword())
-                .inviteCode(userDto.getInviteCode()).build();
-        return user;
+                .inviteCode(userDto.getInviteCode())
+                .build();
     }
-    private UserDto entityToDto(User savedUser){
-        UserDto build= UserDto.builder()
+
+    private UserDto entityToDto(User savedUser) {
+        return UserDto.builder()
                 .phoneNumber(savedUser.getPhoneNumber())
                 .password(savedUser.getPassword())
-                .inviteCode(savedUser.getInviteCode()).build();
-        return build;
+                .inviteCode(savedUser.getInviteCode())
+                .build();
     }
-
-    // login user
-//    public String loginUser(UserDto userDto){
-//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-//        Optional<User> existingPassword = userRepository.findByPassword(userDto.getPassword());
-//        System.out.println(existingPassword);
-//        if(existingUser.isPresent()&& existingPassword.isPresent()){
-//            return "User is present login successful";
-//        } else if (existingUser.isPresent() && !existingPassword.isPresent()) {
-//            return "incorrect password";
-//
-//        }else {
-//            return "Create account";
-//
-//        }
-//    }
-     // Correct but try another
-//    public String loginUser(UserDto userDto) {
-//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-//
-//        if (existingUser.isPresent() && existingUser.get().getPassword().equals(userDto.getPassword())) {
-//            int id = existingUser.get().getId();
-//
-//
-//
-//            return "User is present, login successful";
-//        } else if (existingUser.isPresent()) {
-//            return "Incorrect password";
-//        } else {
-//            return "Create account";
-//        }
-//    }
-
-//    public UserPortfolioResponse loginUser(UserDto userDto) {
-//        Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
-//
-//        if (existingUser.isPresent() && existingUser.get().getPassword().equals(userDto.getPassword())) {
-//
-//            int id = existingUser.get().getId();
-//            Portfolio portfolio = portfolioRepository.findByUserId(id);
-//            System.out.println("+++++"+portfolio);
-//            if (portfolio != null) {
-//                return new UserPortfolioResponse("User is present, login successful");
-//            } else {
-//                return new UserPortfolioResponse("User is present, but no portfolio found");
-//            }
-//        } else if (existingUser.isPresent()) {
-//            return new UserPortfolioResponse("Incorrect password");
-//        } else {
-//            return new UserPortfolioResponse("Create account");
-//        }
-//    }
 
     public String loginUser(UserDto userDto) {
         Optional<User> existingUser = userRepository.findByPhoneNumber(userDto.getPhoneNumber());
@@ -229,44 +109,35 @@ public class UserService {
             Portfolio portfolio = portfolioRepository.findByUserId(id);
 
             if (portfolio != null) {
-//                UserPortfolioResponse response = new UserPortfolioResponse("User is present, login successful");
-//                response.setPortfolio(portfolio); // Set the portfolio in the response
                 return "User is present, login successful";
             } else {
-//                return new UserPortfolioResponse("User is present, but no portfolio found");
                 return "User is present, but no portfolio found";
             }
         } else if (existingUser.isPresent()) {
-//            return new UserPortfolioResponse("Incorrect password");
-             return "Incorrect password";
+            return "Incorrect password";
         } else {
-//            return new UserPortfolioResponse("Create an account");
             return "Create an account";
         }
     }
 
-    // Method to retrieve all users from the database
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
     public String getBonus() {
         LocalDate today = LocalDate.now();
 
-        // Check if it's a new day
         if (lastClaimDate == null || !lastClaimDate.equals(today)) {
             lastClaimDate = today;
-            bonusClaimed = false; // Reset bonusClaimed flag for a new day
+            bonusClaimed = false;
         }
 
-        // Check if bonus has not been claimed yet today
         if (!bonusClaimed) {
             bonusClaimed = true;
 
-            // Check if there is an existing transaction for today
             BonusTransaction existingTransaction = bonusTransactionRepository.findFirstByOrderByIdDesc();
 
             if (existingTransaction == null) {
-                // If no existing transaction, create a new one
                 BonusTransaction bonusTransaction = new BonusTransaction();
                 bonusTransaction.setTransactionTime(LocalDateTime.now());
                 bonusTransaction.setAmount(2);
@@ -274,7 +145,6 @@ public class UserService {
 
                 return "You have received a bonus of 2 rupees.";
             } else {
-                // If an existing transaction is found, update the amount
                 existingTransaction.setAmount(existingTransaction.getAmount() + 2);
                 bonusTransactionRepository.save(existingTransaction);
 
@@ -284,10 +154,4 @@ public class UserService {
             return "You have already collected the bonus of 2 rupees today.";
         }
     }
-    }
-
-
-
-
-
-
+}

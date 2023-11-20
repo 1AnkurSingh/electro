@@ -35,7 +35,7 @@ public class Portfolio {
     @Column(name = "current_balance")
     private BigDecimal currentBalance;
 
-    @Column(name="referral_status")
+    @Column(name="referral_status", length = 1000)
     private String referralStatus;
 
     @Column(name = "bonus")
