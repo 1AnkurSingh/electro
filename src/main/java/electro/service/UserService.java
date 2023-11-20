@@ -116,8 +116,8 @@ public class UserService {
                         if (existingReferralStatus == null || existingReferralStatus.isEmpty()) {
                             existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
                         } else {
-                            // Append the new referral number to the existing ones
-                            existingReferralPortfolio.setReferralStatus(existingReferralStatus + "," + userDto.getPhoneNumber());
+                            // Replace the existing referral number with the new one
+                            existingReferralPortfolio.setReferralStatus(userDto.getPhoneNumber());
                         }
                         portfolioRepository.save(existingReferralPortfolio);
                     }
