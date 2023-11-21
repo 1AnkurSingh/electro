@@ -4,11 +4,17 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 @Builder
 @Entity
+@Data
+@AllArgsConstructor
+
 public class BankDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,6 +25,9 @@ public class BankDetails {
     private String bankAccountNumber;
 
     private String bankIFSC;
+    private String userId;
+
+
 
     public String getBankIFSC(){
         return bankIFSC;
