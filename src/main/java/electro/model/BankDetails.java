@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @AllArgsConstructor
-
 public class BankDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int accountId ;
+    private int accountId;
+
     private String mobileNumber;
     private String holderName;
 
@@ -26,6 +26,12 @@ public class BankDetails {
 
     private String bankIFSC;
     private String userId;
+
+    // Add a setter for userId
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
 
 
 
