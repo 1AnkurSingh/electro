@@ -45,9 +45,9 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @GetMapping("/getBonus")
-    public ResponseEntity<String> getBonus() {
-        ResponseEntity<String> bonusResponse = userService.getBonus();
+    @GetMapping("/getBonus/{userId}")
+    public ResponseEntity<String> getBonus(@PathVariable String userId) {
+        ResponseEntity<String> bonusResponse = userService.getBonus(userId);
         String bonus = bonusResponse.getBody();
         return new ResponseEntity<>(bonus, HttpStatus.OK);
     }

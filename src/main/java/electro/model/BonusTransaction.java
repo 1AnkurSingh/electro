@@ -18,4 +18,6 @@ public class BonusTransaction {
     private LocalDateTime transactionTime;
 
     private int amount;
+
+    private String userId;
 }

@@ -132,40 +132,48 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public ResponseEntity<String> getBonus() {
+    public ResponseEntity<String> getBonus(String userId) {
         LocalDate today = LocalDate.now();
+        LocalDateTime currentDateTime = LocalDateTime.now();
 
-        // Check if any ApiCallRecord entry exists for today
-        boolean apiCallRecordExists = apiCallRecordRepository.existsByBonusClaimTimeBetween(
-                today.atStartOfDay(), today.atTime(23, 59, 59)
-        );
+        // Get the last bonus claim time for the user
+        Optional<ApiCallRecord> lastApiCallRecordOptional = apiCallRecordRepository.findFirstByUserIdOrderByIdDesc(userId);
 
-        if (!apiCallRecordExists) {
-            // Create and save ApiCallRecord
-            ApiCallRecord apiCallRecord = new ApiCallRecord();
-            apiCallRecord.setBonusClaimed(true);
-            apiCallRecord.setBonusClaimTime(LocalDateTime.now());
-            apiCallRecordRepository.save(apiCallRecord);
+        if (lastApiCallRecordOptional.isPresent()) {
+            ApiCallRecord lastApiCallRecord = lastApiCallRecordOptional.get();
 
-            // Existing code for BonusTransaction
-            BonusTransaction existingTransaction = bonusTransactionRepository.findFirstByOrderByIdDesc();
-
-            if (existingTransaction == null) {
-                BonusTransaction bonusTransaction = new BonusTransaction();
-                bonusTransaction.setTransactionTime(LocalDateTime.now());
-                bonusTransaction.setAmount(2);
-                bonusTransactionRepository.save(bonusTransaction);
-
-                return new ResponseEntity<>("You have received a bonus of 2 rupees.", HttpStatus.OK);
-            } else {
-                existingTransaction.setAmount(existingTransaction.getAmount() + 2);
-                bonusTransactionRepository.save(existingTransaction);
-
-                return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: " +
-                        existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
+            // Check if the last claim was on the same day
+            if (lastApiCallRecord.getBonusClaimTime().toLocalDate().equals(today)) {
+                return new ResponseEntity<>("You have already collected the bonus today.", HttpStatus.OK);
             }
+        }
+
+        // Create and save ApiCallRecord for the user
+        ApiCallRecord apiCallRecord = new ApiCallRecord();
+        apiCallRecord.setUserId(userId);
+        apiCallRecord.setBonusClaimed(true);
+        apiCallRecord.setBonusClaimTime(currentDateTime);
+        apiCallRecord.setBonus(2); // Set bonus amount
+        apiCallRecordRepository.save(apiCallRecord);
+
+        // Existing code for BonusTransaction
+        Optional<BonusTransaction> existingTransactionOptional = bonusTransactionRepository.findFirstByUserIdOrderByIdDesc(userId);
+
+        if (existingTransactionOptional.isPresent()) {
+            BonusTransaction existingTransaction = existingTransactionOptional.get();
+            existingTransaction.setAmount(existingTransaction.getAmount() + 2);
+            bonusTransactionRepository.save(existingTransaction);
+
+            return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: " +
+                    existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("You have already collected the bonus today.", HttpStatus.OK);
+            BonusTransaction bonusTransaction = new BonusTransaction();
+            bonusTransaction.setTransactionTime(currentDateTime);
+            bonusTransaction.setAmount(2);
+            bonusTransaction.setUserId(userId);
+            bonusTransactionRepository.save(bonusTransaction);
+
+            return new ResponseEntity<>("You have received a bonus of 2 rupees.", HttpStatus.OK);
         }
     }
 }
