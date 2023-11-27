@@ -9,19 +9,25 @@ import java.util.Optional;
 
 @Service
 public class BankDetailsService {
+    private final BankRepository bankDetailsRepository;
 
     @Autowired
-    BankRepository bankRepository;
-
-    public BankDetails addBankDetails(BankDetails bankDetails){
-        return bankRepository.save(bankDetails);
+    public BankDetailsService(BankRepository bankDetailsRepository) {
+        this.bankDetailsRepository = bankDetailsRepository;
     }
 
-    public Optional<BankDetails> findAccountById(String userId){
-        int userIdAsInt = Integer.parseInt(userId);
-
-        return bankRepository.findById(userIdAsInt);
+    public boolean doesUserExist(String userId) {
+        return bankDetailsRepository.existsByUserId(userId);
     }
 
+    public BankDetails addBankDetails(BankDetails bankDetails) {
+        // Your logic to add bank details to the database
+        return bankDetailsRepository.save(bankDetails);
+    }
 
+    public BankDetails findBankDetailsByUserId(String userId){
+
+        return bankDetailsRepository.findByUserId(userId);
+    }
 }
+

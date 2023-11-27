@@ -19,26 +19,25 @@ public class BankDetailsController {
 
     @PostMapping("/add/{userId}")
     public ResponseEntity<String> addBankDetails(@PathVariable String userId, @RequestBody BankDetails bankDetails) {
+        // Check if the userId already exists in the database
+        if (bankDetailsService.doesUserExist(userId)) {
+            return new ResponseEntity<>("User ID already exists", HttpStatus.BAD_REQUEST);
+        }
+
         // Set the userId in the BankDetails object
         bankDetails.setUserId(userId);
 
+        // Add bank details to the database
         BankDetails addedBankDetails = bankDetailsService.addBankDetails(bankDetails);
-        return new ResponseEntity<>("Successfully", HttpStatus.CREATED);
+
+        return new ResponseEntity<>("Successfully added bank details", HttpStatus.CREATED);
     }
 
-    @GetMapping("/getAccountById/{userId}")
-    public ResponseEntity<BankDetails> getAccountById(@PathVariable String userId) {
-        Optional<BankDetails> optionalBankDetails = bankDetailsService.findAccountById(userId);
-
-        if (optionalBankDetails.isPresent()) {
-            BankDetails bankDetails = optionalBankDetails.get();
-            return new ResponseEntity<>(bankDetails, HttpStatus.OK);
-        } else {
-            // Handle the case where BankDetails is not found
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        @GetMapping("/getAccountById/{userId}")
+    public ResponseEntity<BankDetails>etAccountById(@PathVariable String userId){
+            BankDetails bankDetailsByUserId = bankDetailsService.findBankDetailsByUserId(userId);
+            return new ResponseEntity<>(bankDetailsByUserId,HttpStatus.OK);
         }
-    }
-
 
 }
 
