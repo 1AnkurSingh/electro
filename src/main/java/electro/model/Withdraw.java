@@ -17,7 +17,6 @@ public class Withdraw {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private LocalDateTime timestamp;
-    private  String userId;
     private BigDecimal amount = BigDecimal.ZERO;
 
     public Withdraw() {
