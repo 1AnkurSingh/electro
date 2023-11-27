@@ -45,11 +45,13 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-        @GetMapping("/getBonus")
-            public ResponseEntity<String>getBonus(){
-            String bonus = userService.getBonus();
-            return new ResponseEntity<>(bonus,HttpStatus.OK);
-        }
+    @GetMapping("/getBonus")
+    public ResponseEntity<String> getBonus() {
+        ResponseEntity<String> bonusResponse = userService.getBonus();
+        String bonus = bonusResponse.getBody();
+        return new ResponseEntity<>(bonus, HttpStatus.OK);
+    }
+
 
 
 }

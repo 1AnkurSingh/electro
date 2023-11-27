@@ -1,14 +1,18 @@
 package electro.service;
 
+import electro.model.ApiCallRecord;
 import electro.model.BonusTransaction;
 import electro.model.Portfolio;
 import electro.model.User;
 import electro.model.userDto.UserDto;
+import electro.repository.ApiCallRecordRepository;
 import electro.repository.BonusTransactionRepository;
 import electro.repository.PortfolioRepository;
 import electro.repository.UserRepository;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -30,6 +34,9 @@ public class UserService {
 
     @Autowired
     BonusTransactionRepository bonusTransactionRepository;
+
+    @Autowired
+    ApiCallRecordRepository apiCallRecordRepository;
 
     private static LocalDate lastClaimDate = null;
     private static boolean bonusClaimed = false;
@@ -125,17 +132,22 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public String getBonus() {
+    public ResponseEntity<String> getBonus() {
         LocalDate today = LocalDate.now();
 
-        if (lastClaimDate == null || !lastClaimDate.equals(today)) {
-            lastClaimDate = today;
-            bonusClaimed = false;
-        }
+        // Check if any ApiCallRecord entry exists for today
+        boolean apiCallRecordExists = apiCallRecordRepository.existsByBonusClaimTimeBetween(
+                today.atStartOfDay(), today.atTime(23, 59, 59)
+        );
 
-        if (!bonusClaimed) {
-            bonusClaimed = true;
+        if (!apiCallRecordExists) {
+            // Create and save ApiCallRecord
+            ApiCallRecord apiCallRecord = new ApiCallRecord();
+            apiCallRecord.setBonusClaimed(true);
+            apiCallRecord.setBonusClaimTime(LocalDateTime.now());
+            apiCallRecordRepository.save(apiCallRecord);
 
+            // Existing code for BonusTransaction
             BonusTransaction existingTransaction = bonusTransactionRepository.findFirstByOrderByIdDesc();
 
             if (existingTransaction == null) {
@@ -144,15 +156,17 @@ public class UserService {
                 bonusTransaction.setAmount(2);
                 bonusTransactionRepository.save(bonusTransaction);
 
-                return "You have received a bonus of 2 rupees.";
+                return new ResponseEntity<>("You have received a bonus of 2 rupees.", HttpStatus.OK);
             } else {
                 existingTransaction.setAmount(existingTransaction.getAmount() + 2);
                 bonusTransactionRepository.save(existingTransaction);
 
-                return "You have received a bonus of 2 rupees. Total bonus: " + existingTransaction.getAmount() + " rupees.";
+                return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: " +
+                        existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
             }
         } else {
-            return "You have already collected the bonus of 2 rupees today.";
+            return new ResponseEntity<>("You have already collected the bonus today.", HttpStatus.OK);
         }
     }
 }
+
