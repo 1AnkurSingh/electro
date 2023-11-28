@@ -14,12 +14,9 @@ public class ApiCallRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // Add userId field
     private String userId;
-
-    private boolean bonusClaimed; // New field to indicate bonus claimed
-    private LocalDateTime bonusClaimTime; // New field to store bonus claim timestamp
+    private boolean bonusClaimed;
+    private LocalDateTime bonusClaimTime;
     private int bonus;
 
     public void setUserId(String userId) {
@@ -27,6 +24,4 @@ public class ApiCallRecord {
 
     }
 
-
-    // Getter and setter methods
 }

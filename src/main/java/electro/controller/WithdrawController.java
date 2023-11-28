@@ -13,15 +13,8 @@ import java.time.LocalDateTime;
 
 public class WithdrawController {
 
-//    @Autowired
-//    WithdrawService withdrawService;
-//
-//    @PostMapping("/withdrawById/{userId}")
-//    public Withdraw withdrawById(@RequestBody Withdraw withdraw){
-//        return withdrawService.withdrawById(withdraw);
-//    }
-@Autowired
-WithdrawService withdrawService;
+        @Autowired
+        WithdrawService withdrawService;
 
     @PostMapping("/withdrawById/{userId}")
     public Withdraw withdrawById(@RequestBody Withdraw withdraw){

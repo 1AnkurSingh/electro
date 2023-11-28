@@ -1,5 +1,6 @@
 package electro.controller;
 
+import electro.model.ApiCallRecord;
 import electro.model.User;
 import electro.model.userDto.UserDto;
 import electro.service.LoginResponse;
@@ -11,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -51,6 +53,36 @@ public class UserController {
         String bonus = bonusResponse.getBody();
         return new ResponseEntity<>(bonus, HttpStatus.OK);
     }
+
+//    @GetMapping("/bonusRecord/{userId}")
+//    public ResponseEntity<ApiCallRecord> bonusRecord(@PathVariable String userId) {
+//        Optional<ApiCallRecord> apiCallRecordOptional = userService.bonusRecord(userId);
+//
+//        if (apiCallRecordOptional.isPresent()) {
+//            ApiCallRecord apiCallRecord = apiCallRecordOptional.get();
+//            return new ResponseEntity<>(apiCallRecord, HttpStatus.OK);
+//        } else {
+//            // If the record is not present, you may want to return a different HTTP status code, such as NOT_FOUND
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//    }
+
+    @GetMapping("/bonusRecord/{userId}")
+    public ResponseEntity<?> bonusRecord(@PathVariable String userId) {
+        Optional<ApiCallRecord> apiCallRecordOptional = userService.bonusRecord(userId);
+
+        if (apiCallRecordOptional.isPresent()) {
+            ApiCallRecord apiCallRecord = apiCallRecordOptional.get();
+            return new ResponseEntity<>(apiCallRecord, HttpStatus.OK);
+        } else {
+            // If the record is not present, return a response indicating that the user ID is not found
+            String errorMessage = "User ID not found: " + userId;
+            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+        }
+    }
+
+
+
 
 
 

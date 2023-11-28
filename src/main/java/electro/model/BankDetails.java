@@ -27,7 +27,6 @@ public class BankDetails {
     private String bankIFSC;
     private String userId;
 
-    // Add a setter for userId
     public void setUserId(String userId) {
         this.userId = userId;
     }

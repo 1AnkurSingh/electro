@@ -1,12 +1,15 @@
 package electro.repository;
 
 import electro.model.ApiCallRecord;
+import electro.model.BankDetails;
 import electro.model.BonusTransaction;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Repository
 public interface ApiCallRecordRepository extends JpaRepository<ApiCallRecord, Long> {
@@ -15,5 +18,8 @@ public interface ApiCallRecordRepository extends JpaRepository<ApiCallRecord, Lo
 
     Optional<ApiCallRecord> findFirstByUserIdOrderByIdDesc(String userId);
 
+
+    @Transactional
+    Stream<ApiCallRecord> findByUserId(String userId);
 
 }

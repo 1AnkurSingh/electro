@@ -30,8 +30,6 @@ public class Portfolio {
     @Column(name = "total_income")
     private BigDecimal totalIncome;
 
-
-
     @Column(name = "current_balance")
     private BigDecimal currentBalance;
 

@@ -9,6 +9,7 @@ import electro.repository.ApiCallRecordRepository;
 import electro.repository.BonusTransactionRepository;
 import electro.repository.PortfolioRepository;
 import electro.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.Builder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -176,5 +177,21 @@ public class UserService {
             return new ResponseEntity<>("You have received a bonus of 2 rupees.", HttpStatus.OK);
         }
     }
+
+//    @Transactional
+//    public Optional<ApiCallRecord> bonusRecord(String userId) {
+//        return apiCallRecordRepository.findByUserId(userId)
+//                .findFirst();
+//    }
+
+    @Transactional
+    public Optional<ApiCallRecord> bonusRecord(String userId) {
+        return apiCallRecordRepository.findByUserId(userId)
+                .findFirst()
+                .or(() -> Optional.empty()); // If not found, return Optional.empty()
+    }
+
+
+
 }
 

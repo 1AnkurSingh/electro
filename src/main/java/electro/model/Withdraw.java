@@ -27,7 +27,7 @@ public class Withdraw {
         return id;
     }
 
-    // Other getters and setters
+
 
     public LocalDateTime getTimestamp() {
         return timestamp;
