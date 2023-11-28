@@ -17,4 +17,5 @@ public interface UserRepository extends JpaRepository<User,Integer> {
 
     User findByRandom5DiditNumber(Integer random5DiditNumber);
 
+
 }
