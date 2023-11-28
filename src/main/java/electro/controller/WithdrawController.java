@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 
@@ -17,9 +18,14 @@ public class WithdrawController {
         WithdrawService withdrawService;
 
     @PostMapping("/withdrawById/{userId}")
-    public Withdraw withdrawById(@RequestBody Withdraw withdraw){
-        // The timestamp is automatically set in the constructor
+    public Withdraw withdrawById(@PathVariable Long userId, @RequestBody Withdraw withdraw) {
+        withdraw.setUserId(userId);  // Set userId from the path variable
         return withdrawService.withdrawById(withdraw);
+    }
+
+    @GetMapping("/getwithdrawdataByuserId/{userId}")
+    public List<Withdraw> getWithdrawDataByUserId(@PathVariable Long userId) {
+        return withdrawService.getWithdrawDataByUserId(userId);
     }
 
 }

@@ -18,6 +18,7 @@ public class Withdraw {
     private Long id;
     private LocalDateTime timestamp;
     private BigDecimal amount = BigDecimal.ZERO;
+    private Long userId;
 
     public Withdraw() {
         this.timestamp = LocalDateTime.now();
