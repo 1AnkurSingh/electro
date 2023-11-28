@@ -145,7 +145,16 @@ public class UserService {
 
             // Check if the last claim was on the same day
             if (lastApiCallRecord.getBonusClaimTime().toLocalDate().equals(today)) {
-                return new ResponseEntity<>("You have already collected the bonus today.", HttpStatus.OK);
+
+                Optional<BonusTransaction> existingTransactionOptional = bonusTransactionRepository.findFirstByUserIdOrderByIdDesc(userId);
+                BonusTransaction existingTransaction = existingTransactionOptional.get();
+
+
+
+
+                return new ResponseEntity<>("You have already collected the bonus today. "+
+
+                       "total amount = " + existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
             }
         }
 
@@ -168,13 +177,16 @@ public class UserService {
             return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: " +
                     existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
         } else {
+            BonusTransaction existingTransaction = existingTransactionOptional.get();
+
             BonusTransaction bonusTransaction = new BonusTransaction();
             bonusTransaction.setTransactionTime(currentDateTime);
             bonusTransaction.setAmount(2);
             bonusTransaction.setUserId(userId);
             bonusTransactionRepository.save(bonusTransaction);
 
-            return new ResponseEntity<>("You have received a bonus of 2 rupees.", HttpStatus.OK);
+            return new ResponseEntity<>("You have received a bonus of 2 rupees."+
+                    existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
         }
     }
 
