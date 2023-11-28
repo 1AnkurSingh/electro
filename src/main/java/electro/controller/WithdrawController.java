@@ -26,6 +26,7 @@ public class WithdrawController {
     @GetMapping("/getwithdrawdataByuserId/{userId}")
     public List<Withdraw> getWithdrawDataByUserId(@PathVariable Long userId) {
         return withdrawService.getWithdrawDataByUserId(userId);
+
     }
 
 }
