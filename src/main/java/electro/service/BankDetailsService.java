@@ -1,6 +1,7 @@
 package electro.service;
 
 import electro.model.BankDetails;
+import electro.model.Withdraw;
 import electro.repository.BankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,18 +17,10 @@ public class BankDetailsService {
         this.bankDetailsRepository = bankDetailsRepository;
     }
 
-//    public boolean doesUserExist(String userId) {
-//        return bankDetailsRepository.existsByUserId(userId);
-//    }
-//
-//    public BankDetails addBankDetails(BankDetails bankDetails) {
-//        // Your logic to add bank details to the database
-//        return bankDetailsRepository.save(bankDetails);
-//    }
-//
-//    public BankDetails findBankDetailsByUserId(String userId){
-//
-//        return bankDetailsRepository.findByUserId(userId);
-//    }
+    public BankDetails addBankDetails(BankDetails bankDetails) {
+        return bankDetailsRepository.save(bankDetails);
+    }
+
+
 }
 

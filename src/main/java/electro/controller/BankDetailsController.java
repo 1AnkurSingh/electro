@@ -1,6 +1,7 @@
 package electro.controller;
 
 import electro.model.BankDetails;
+import electro.model.Withdraw;
 import electro.repository.BankRepository;
 import electro.service.BankDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,18 +64,30 @@ public class BankDetailsController {
 //            return new ResponseEntity<>(bankDetailsByUserId,HttpStatus.OK);
 //        }
 
-    @PostMapping
-    public String addBankDetails(@RequestBody BankDetails bankDetails) {
-        // Assuming userId is passed from the frontend
-        String userIdFromFrontend = bankDetails.getUserId();
+//    @PostMapping
+//    public String addBankDetails(@RequestBody BankDetails bankDetails) {
+//        // Assuming userId is passed from the frontend
+//        String userIdFromFrontend = bankDetails.getUserId();
+//
+//        // You can perform additional validation or logic here
+//
+//        // Save bank details to the database
+//        bankRepository.save(bankDetails);
+//
+//        return "Bank details added successfully for user with ID: " + userIdFromFrontend;
+//    }
 
-        // You can perform additional validation or logic here
 
-        // Save bank details to the database
-        bankRepository.save(bankDetails);
 
-        return "Bank details added successfully for user with ID: " + userIdFromFrontend;
+
+
+    @PostMapping("/addBankDetails/{userId}")
+    public  BankDetails addBankDetails (@PathVariable String userId , @RequestBody BankDetails bankDetails){
+        bankDetails.setUserId(userId);
+        return  bankDetailsService.addBankDetails(bankDetails);
     }
+
+
 
 }
 
