@@ -1,6 +1,7 @@
 package electro.controller;
 
 import electro.model.ApiCallRecord;
+import electro.model.BonusTransaction;
 import electro.model.User;
 import electro.model.userDto.UserDto;
 import electro.service.LoginResponse;
@@ -49,11 +50,6 @@ public class UserController {
 
     @GetMapping("/getBonus/{userId}")
     public ResponseEntity<String> getBonus(@PathVariable String userId) {
-        // Check if userId exists in the database
-        if (!userService.isUserIdPresent(userId)) {
-            return new ResponseEntity<>("userId not present", HttpStatus.NOT_FOUND);
-        }
-
         ResponseEntity<String> bonusResponse = userService.getBonus(userId);
         String bonus = bonusResponse.getBody();
         return new ResponseEntity<>(bonus, HttpStatus.OK);
@@ -86,10 +82,11 @@ public class UserController {
         }
     }
 
-    @GetMapping("/totalAmount/{userId}")
-    public Integer getTotalAmountByUserId(@PathVariable String userId) {
-        return userService.getTotalAmountByUserId(userId);
-    }
+
+//    @GetMapping("/getBonusAmount/{userId}")
+//    public BonusTransaction getBonusAmount(@PathVariable String userId){
+//        return userService.getBonusAmount(userId);
+//    }
 
 
 

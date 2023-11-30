@@ -16,18 +16,18 @@ public class BankDetailsService {
         this.bankDetailsRepository = bankDetailsRepository;
     }
 
-    public boolean doesUserExist(String userId) {
-        return bankDetailsRepository.existsByUserId(userId);
-    }
-
-    public BankDetails addBankDetails(BankDetails bankDetails) {
-        // Your logic to add bank details to the database
-        return bankDetailsRepository.save(bankDetails);
-    }
-
-    public BankDetails findBankDetailsByUserId(String userId){
-
-        return bankDetailsRepository.findByUserId(userId);
-    }
+//    public boolean doesUserExist(String userId) {
+//        return bankDetailsRepository.existsByUserId(userId);
+//    }
+//
+//    public BankDetails addBankDetails(BankDetails bankDetails) {
+//        // Your logic to add bank details to the database
+//        return bankDetailsRepository.save(bankDetails);
+//    }
+//
+//    public BankDetails findBankDetailsByUserId(String userId){
+//
+//        return bankDetailsRepository.findByUserId(userId);
+//    }
 }
 
