@@ -19,7 +19,7 @@ public class BankDetailsController {
     @Autowired
     BankDetailsService bankDetailsService;
 
-    @PostMapping("/addd/{userId}")
+    @PutMapping("/addd/{userId}")
     public ResponseEntity<String> addBankDetails(@PathVariable String userId, @RequestBody BankDetails bankDetails) {
         // Check if the userId already exists in the database
         if (bankDetailsService.doesUserExist(userId)) {
