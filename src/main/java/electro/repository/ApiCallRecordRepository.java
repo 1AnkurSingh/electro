@@ -1,8 +1,6 @@
 package electro.repository;
 
 import electro.model.ApiCallRecord;
-import electro.model.BankDetails;
-import electro.model.BonusTransaction;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
