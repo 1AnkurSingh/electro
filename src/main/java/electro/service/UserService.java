@@ -208,6 +208,27 @@ public class UserService {
         return bonusTransactionRepository.getTotalAmountByUserId(userId);
     }
 
+    public String updatePassword(int userId, String newPassword) {
+        // Find the user by ID
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        // Check if the user exists
+        if (userOptional.isEmpty()) {
+            return "User not found";
+        }
+
+        // Update the password
+        User user = userOptional.get();
+        user.setPassword(newPassword);
+
+        // Save the updated user
+        userRepository.save(user);
+
+        return "Password updated successfully";
+    }
+
+
+
 
 }
 

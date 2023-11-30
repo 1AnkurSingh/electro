@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -91,6 +92,22 @@ public class UserController {
         return userService.getTotalAmountByUserId(userId);
     }
 
+
+
+    @PutMapping("/updatePassword/{userId}")
+    public ResponseEntity<String> updatePassword(
+            @PathVariable int userId,
+            @RequestBody Map<String, String> request) {
+
+        if (!request.containsKey("password")) {
+            return ResponseEntity.badRequest().body("Password not provided in the request body");
+        }
+
+        String newPassword = request.get("password");
+
+        String result = userService.updatePassword(userId, newPassword);
+        return ResponseEntity.ok(result);
+    }
 
 
 
