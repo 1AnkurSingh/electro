@@ -1,9 +1,11 @@
 package electro.controller;
 
+import electro.model.AddBank;
 import electro.model.ApiCallRecord;
 import electro.model.BonusTransaction;
 import electro.model.User;
 import electro.model.userDto.UserDto;
+import electro.service.AddBankService;
 import electro.service.LoginResponse;
 import electro.service.UserPortfolioResponse;
 import electro.service.UserService;
@@ -23,6 +25,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    AddBankService addBankService;
 
 
     // Add User
@@ -87,6 +91,13 @@ public class UserController {
         return userService.getTotalAmountByUserId(userId);
     }
 
+
+
+
+    @PostMapping("/add")
+    public AddBank addBank(@RequestBody AddBank addBank){
+        return addBankService.addBank(addBank);
+    }
 
 
 
