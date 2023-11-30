@@ -147,14 +147,14 @@ public class UserService {
             if (lastApiCallRecord.getBonusClaimTime().toLocalDate().equals(today)) {
 
                 Optional<BonusTransaction> existingTransactionOptional = bonusTransactionRepository.findFirstByUserIdOrderByIdDesc(userId);
-                BonusTransaction existingTransaction = existingTransactionOptional.get();
 
+                if (existingTransactionOptional.isPresent()) {
+                    BonusTransaction existingTransaction = existingTransactionOptional.get();
 
-                return new ResponseEntity<>("You have already collected the bonus today. " +
-
-                        "total amount = " + existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
+                    return new ResponseEntity<>("You have already collected the bonus today. " +
+                            "Total amount = " + existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
+                }
             }
-
         }
 
         // Create and save ApiCallRecord for the user
@@ -176,18 +176,20 @@ public class UserService {
             return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: " +
                     existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
         } else {
-            BonusTransaction existingTransaction = existingTransactionOptional.get();
-
             BonusTransaction bonusTransaction = new BonusTransaction();
             bonusTransaction.setTransactionTime(currentDateTime);
             bonusTransaction.setAmount(2);
             bonusTransaction.setUserId(userId);
             bonusTransactionRepository.save(bonusTransaction);
 
-            return new ResponseEntity<>("You have received a bonus of 2 rupees." +
-                    existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
+            return new ResponseEntity<>("You have received a bonus of 2 rupees. Total bonus: 2 rupees.", HttpStatus.OK);
         }
     }
+
+    public boolean isUserIdPresent(String userId) {
+        return apiCallRecordRepository.existsByUserId(userId);
+    }
+
 
 //    @Transactional
 //    public Optional<ApiCallRecord> bonusRecord(String userId) {

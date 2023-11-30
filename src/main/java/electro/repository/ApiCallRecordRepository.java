@@ -22,4 +22,7 @@ public interface ApiCallRecordRepository extends JpaRepository<ApiCallRecord, Lo
     @Transactional
     Stream<ApiCallRecord> findByUserId(String userId);
 
+    boolean existsByUserId(String userId);
+
+
 }

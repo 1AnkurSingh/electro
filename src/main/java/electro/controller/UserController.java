@@ -49,6 +49,11 @@ public class UserController {
 
     @GetMapping("/getBonus/{userId}")
     public ResponseEntity<String> getBonus(@PathVariable String userId) {
+        // Check if userId exists in the database
+        if (!userService.isUserIdPresent(userId)) {
+            return new ResponseEntity<>("userId not present", HttpStatus.NOT_FOUND);
+        }
+
         ResponseEntity<String> bonusResponse = userService.getBonus(userId);
         String bonus = bonusResponse.getBody();
         return new ResponseEntity<>(bonus, HttpStatus.OK);
