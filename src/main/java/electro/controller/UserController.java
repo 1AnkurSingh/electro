@@ -82,11 +82,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/totalAmount/{userId}")
+    public Integer getTotalAmountByUserId(@PathVariable String userId) {
+        return userService.getTotalAmountByUserId(userId);
+    }
 
-//    @GetMapping("/getBonusAmount/{userId}")
-//    public BonusTransaction getBonusAmount(@PathVariable String userId){
-//        return userService.getBonusAmount(userId);
-//    }
+
+
 
 
 
