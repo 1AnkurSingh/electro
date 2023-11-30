@@ -2,12 +2,13 @@ package electro.controller;
 
 import electro.exception.UserAlreadyExistsException;
 import electro.model.AddBank;
-import electro.model.Withdraw;
 import electro.service.AddBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @CrossOrigin("*")
@@ -24,6 +25,17 @@ public class AddBankController {
 //        return addBankService.addBank(addBank);
 //
 //    }
+
+
+    @GetMapping("/get/{userId}")
+    public Optional<AddBank> get(@PathVariable String userId){
+        return addBankService.get(userId);
+    }
+
+
+
+
+
 @PostMapping("/addBankDetails/{userId}")
 public ResponseEntity<Object> addBankDetails(@PathVariable String userId, @RequestBody AddBank addBank) {
     try {
@@ -38,6 +50,8 @@ public ResponseEntity<Object> addBankDetails(@PathVariable String userId, @Reque
         return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+
+
 
 
 }

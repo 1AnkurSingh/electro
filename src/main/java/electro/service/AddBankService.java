@@ -2,7 +2,6 @@ package electro.service;
 
 import electro.exception.UserAlreadyExistsException;
 import electro.model.AddBank;
-import electro.model.Withdraw;
 import electro.repository.AddBankRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,5 +29,7 @@ public class AddBankService {
     }
 
 
-
+    public Optional<AddBank> get(String userId) {
+        return addBankRepository.findByUserId(userId);
+    }
 }
