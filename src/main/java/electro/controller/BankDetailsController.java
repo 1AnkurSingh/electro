@@ -11,7 +11,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/bank")
-@CrossOrigin("*")
+//@CrossOrigin("*")
+@CrossOrigin(origins = "*", methods = {RequestMethod.POST})
+
 public class BankDetailsController {
 
     @Autowired
