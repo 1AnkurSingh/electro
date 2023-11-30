@@ -150,11 +150,9 @@ public class UserService {
                 BonusTransaction existingTransaction = existingTransactionOptional.get();
 
 
+                return new ResponseEntity<>("You have already collected the bonus today. " +
 
-
-                return new ResponseEntity<>("You have already collected the bonus today. "+
-
-                       "total amount = " + existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
+                        "total amount = " + existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
             }
 
         }
@@ -186,7 +184,7 @@ public class UserService {
             bonusTransaction.setUserId(userId);
             bonusTransactionRepository.save(bonusTransaction);
 
-            return new ResponseEntity<>("You have received a bonus of 2 rupees."+
+            return new ResponseEntity<>("You have received a bonus of 2 rupees." +
                     existingTransaction.getAmount() + " rupees.", HttpStatus.OK);
         }
     }
@@ -204,7 +202,12 @@ public class UserService {
                 .or(() -> Optional.empty()); // If not found, return Optional.empty()
     }
 
+    public Integer getTotalAmountByUserId(String userId) {
+        return bonusTransactionRepository.getTotalAmountByUserId(userId);
+    }
 
 
 }
+
+
 
