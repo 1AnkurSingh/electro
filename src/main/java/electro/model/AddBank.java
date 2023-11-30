@@ -22,5 +22,6 @@ public class AddBank {
     private String holderName;
     private String bankAccountNumber;
     private String bankIFSC;
+    private String UserId;
 
 }

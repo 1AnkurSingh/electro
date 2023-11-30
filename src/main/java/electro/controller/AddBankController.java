@@ -1,7 +1,7 @@
 package electro.controller;
 
 import electro.model.AddBank;
-import electro.repository.AddBankRepository;
+import electro.model.Withdraw;
 import electro.service.AddBankService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +14,11 @@ public class AddBankController {
     @Autowired
     AddBankService addBankService;
 
-    @PostMapping("/add")
-    public AddBank addBank(@RequestBody AddBank addBank){
-        return addBankService.addBank(addBank);
-    }
 
+    @PostMapping("/addBankDetails/{userId}")
+    public AddBank addBankDetails(@PathVariable String userId, @RequestBody AddBank addBank) {
+        addBank.setUserId(userId);
+        return addBankService.addBank(addBank);
+
+    }
 }
