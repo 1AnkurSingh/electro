@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Entity
 public class AddBank {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int accountId;
     private String mobileNumber;
     private String holderName;
