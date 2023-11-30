@@ -44,7 +44,7 @@ public ResponseEntity<Object> addBankDetails(@PathVariable String userId, @Reque
         return new ResponseEntity<>("Bank details added successfully!", HttpStatus.CREATED);
     } catch (UserAlreadyExistsException e) {
         // Handle user already exists exception
-        return new ResponseEntity<>("User already exists!", HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>("Bank Details Already saved!!", HttpStatus.BAD_REQUEST);
     } catch (Exception e) {
         // Handle other exceptions
         return new ResponseEntity<>("An error occurred", HttpStatus.INTERNAL_SERVER_ERROR);
