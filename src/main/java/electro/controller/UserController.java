@@ -94,10 +94,7 @@ public class UserController {
 
 
 
-    @PostMapping("/add")
-    public AddBank addBank(@RequestBody AddBank addBank){
-        return addBankService.addBank(addBank);
-    }
+
 
 
 
