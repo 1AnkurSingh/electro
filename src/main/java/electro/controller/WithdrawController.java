@@ -19,11 +19,11 @@ public class WithdrawController {
         WithdrawService withdrawService;
 
     @PostMapping("/withdrawById/{userId}")
-    public Withdraw withdrawById(@PathVariable Long userId, @RequestBody Withdraw withdraw) {
+    public String withdrawById(@PathVariable Long userId, @RequestBody Withdraw withdraw) {
         withdraw.setUserId(userId);  // Set userId from the path variable
-        return withdrawService.withdrawById(withdraw);
+        withdrawService.withdrawById(withdraw);
+        return "Withdrawal Done!!";
     }
-
     @GetMapping("/getwithdrawdataByuserId/{userId}")
     public List<Withdraw> getWithdrawDataByUserId(@PathVariable Long userId) {
         return withdrawService.getWithdrawDataByUserId(userId);
