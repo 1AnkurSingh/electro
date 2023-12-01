@@ -208,9 +208,9 @@ public class UserService {
         return bonusTransactionRepository.getTotalAmountByUserId(userId);
     }
 
-    public String updatePassword(int userId, String newPassword) {
-        // Find the user by ID
-        Optional<User> userOptional = userRepository.findById(userId);
+    public String updatePassword(String phoneNumber, String newPassword) {
+        // Find the user by phone number
+        Optional<User> userOptional = userRepository.findByPhoneNumber(phoneNumber);
 
         // Check if the user exists
         if (userOptional.isEmpty()) {

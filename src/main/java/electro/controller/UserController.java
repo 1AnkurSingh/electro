@@ -94,9 +94,9 @@ public class UserController {
 
 
 
-    @PutMapping("/updatePassword/{userId}")
+    @PutMapping("/updatePassword/{phoneNumber}")
     public ResponseEntity<String> updatePassword(
-            @PathVariable int userId,
+            @PathVariable String phoneNumber,
             @RequestBody Map<String, String> request) {
 
         if (!request.containsKey("password")) {
@@ -105,9 +105,10 @@ public class UserController {
 
         String newPassword = request.get("password");
 
-        String result = userService.updatePassword(userId, newPassword);
+        String result = userService.updatePassword(phoneNumber, newPassword);
         return ResponseEntity.ok(result);
     }
+
 
 
 
