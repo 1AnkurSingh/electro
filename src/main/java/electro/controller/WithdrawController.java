@@ -37,7 +37,7 @@ public class WithdrawController {
         List<Withdraw> withdrawData = withdrawService.getWithdrawDataByUserId(userId);
 
         ZoneId clientZoneId = ZoneId.of(clientTimeZone);
-        ZoneOffset offset = ZoneOffset.of("+05:30"); // Offset for India Standard Time
+//        ZoneOffset offset = ZoneOffset.of("+05:30"); // Offset for India Standard Time
 
         List<Map<String, Object>> formattedWithdrawData = new ArrayList<>();
 
@@ -46,10 +46,10 @@ public class WithdrawController {
             formattedWithdraw.put("id", withdraw.getId());
 
             LocalDateTime timestampUTC = withdraw.getTimestamp().atZone(ZoneOffset.UTC).toLocalDateTime();
-            LocalDateTime timestampIST = timestampUTC.plusHours(5).plusMinutes(30); // Adding 5 hours and 30 minutes
+//            LocalDateTime timestampIST = timestampUTC.plusHours(5).plusMinutes(30); // Adding 5 hours and 30 minutes
 
             // Adjusting for client's time zone
-            ZonedDateTime zonedDateTimeIST = timestampIST.atZone(ZoneOffset.UTC).withZoneSameInstant(clientZoneId);
+            ZonedDateTime zonedDateTimeIST = timestampUTC.atZone(ZoneOffset.UTC).withZoneSameInstant(clientZoneId);
             formattedWithdraw.put("timestamp", zonedDateTimeIST.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss")));
 
             formattedWithdraw.put("amount", withdraw.getAmount());
