@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +33,8 @@ public class WithdrawController {
     public List<Map<String, Object>> getWithdrawDataByUserId(@PathVariable Long userId) {
         List<Withdraw> withdrawData = withdrawService.getWithdrawDataByUserId(userId);
 
-        // Format timestamp using DateTimeFormatter
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss");
+        // Specify the time zone for India (IST)
+        ZoneId indiaTimeZone = ZoneId.of("Asia/Kolkata");
 
         // Create a new list to hold the formatted data
         List<Map<String, Object>> formattedWithdrawData = new ArrayList<>();
@@ -41,7 +42,11 @@ public class WithdrawController {
         for (Withdraw withdraw : withdrawData) {
             Map<String, Object> formattedWithdraw = new HashMap<>();
             formattedWithdraw.put("id", withdraw.getId());
-            formattedWithdraw.put("timestamp", withdraw.getTimestamp().format(formatter));
+
+            // Convert the LocalDateTime to IST
+            LocalDateTime timestampIST = withdraw.getTimestamp().atZone(indiaTimeZone).toLocalDateTime();
+            formattedWithdraw.put("timestamp", timestampIST.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss")));
+
             formattedWithdraw.put("amount", withdraw.getAmount());
             formattedWithdraw.put("userId", withdraw.getUserId());
             formattedWithdrawData.add(formattedWithdraw);
@@ -49,6 +54,7 @@ public class WithdrawController {
 
         return formattedWithdrawData;
     }
+
 
 }
 

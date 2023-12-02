@@ -19,7 +19,7 @@ public class Withdraw {
     private Long id;
 
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM dd yyyy HH:mm:ss")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM dd yyyy HH:mm:ss", timezone = "Asia/Kolkata")
     private LocalDateTime timestamp;
 
     private BigDecimal amount = BigDecimal.ZERO;
