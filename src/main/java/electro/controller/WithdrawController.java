@@ -8,7 +8,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin("*")
@@ -25,9 +29,25 @@ public class WithdrawController {
         return "Withdrawal Done!!";
     }
     @GetMapping("/getwithdrawdataByuserId/{userId}")
-    public List<Withdraw> getWithdrawDataByUserId(@PathVariable Long userId) {
-        return withdrawService.getWithdrawDataByUserId(userId);
+    public List<Map<String, Object>> getWithdrawDataByUserId(@PathVariable Long userId) {
+        List<Withdraw> withdrawData = withdrawService.getWithdrawDataByUserId(userId);
 
+        // Format timestamp using DateTimeFormatter
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss");
+
+        // Create a new list to hold the formatted data
+        List<Map<String, Object>> formattedWithdrawData = new ArrayList<>();
+
+        for (Withdraw withdraw : withdrawData) {
+            Map<String, Object> formattedWithdraw = new HashMap<>();
+            formattedWithdraw.put("id", withdraw.getId());
+            formattedWithdraw.put("timestamp", withdraw.getTimestamp().format(formatter));
+            formattedWithdraw.put("amount", withdraw.getAmount());
+            formattedWithdraw.put("userId", withdraw.getUserId());
+            formattedWithdrawData.add(formattedWithdraw);
+        }
+
+        return formattedWithdrawData;
     }
 
 }

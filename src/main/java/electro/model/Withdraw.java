@@ -1,6 +1,7 @@
 package electro.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,7 +17,11 @@ public class Withdraw {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MMM dd yyyy HH:mm:ss")
     private LocalDateTime timestamp;
+
     private BigDecimal amount = BigDecimal.ZERO;
     private Long userId;
 
