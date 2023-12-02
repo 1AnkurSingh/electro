@@ -14,9 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @RequestMapping("/user")
@@ -75,17 +74,40 @@ public class UserController {
 
     @GetMapping("/bonusRecord/{userId}")
     public ResponseEntity<?> bonusRecord(@PathVariable String userId) {
-        Optional<ApiCallRecord> apiCallRecordOptional = userService.bonusRecord(userId);
+        List<ApiCallRecord> apiCallRecords = userService.bonusRecord(userId);
 
-        if (apiCallRecordOptional.isPresent()) {
-            ApiCallRecord apiCallRecord = apiCallRecordOptional.get();
-            return new ResponseEntity<>(apiCallRecord, HttpStatus.OK);
+        if (!apiCallRecords.isEmpty()) {
+            // Format timestamp using DateTimeFormatter
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss");
+
+            // Create a new list to hold the formatted data
+            List<Map<String, Object>> formattedBonusRecords = new ArrayList<>();
+
+            for (ApiCallRecord apiCallRecord : apiCallRecords) {
+                Map<String, Object> formattedBonusRecord = new HashMap<>();
+                formattedBonusRecord.put("id", apiCallRecord.getId());
+                formattedBonusRecord.put("userId", apiCallRecord.getUserId());
+                formattedBonusRecord.put("bonusClaimed", apiCallRecord.isBonusClaimed());
+                formattedBonusRecord.put("bonusClaimTime", apiCallRecord.getBonusClaimTime().format(formatter));
+                formattedBonusRecord.put("bonus", apiCallRecord.getBonus());
+                formattedBonusRecords.add(formattedBonusRecord);
+            }
+
+            // Create a response map to structure the response
+            Map<String, Object> responseMap = new HashMap<>();
+            responseMap.put("data", formattedBonusRecords);
+//            responseMap.put("message", "Bonus records fetched successfully.");
+
+            return new ResponseEntity<>(responseMap, HttpStatus.OK);
         } else {
-            // If the record is not present, return a response indicating that the user ID is not found
-            String errorMessage = "User ID not found: " + userId;
-            return new ResponseEntity<>(errorMessage, HttpStatus.NOT_FOUND);
+            // If the records are not present, return a response indicating that the user ID is not found
+            Map<String, Object> errorResponse = new HashMap<>();
+            errorResponse.put("message", "User ID not found: " + userId);
+
+            return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+
 
     @GetMapping("/totalAmount/{userId}")
     public Integer getTotalAmountByUserId(@PathVariable String userId) {

@@ -198,11 +198,10 @@ public class UserService {
 //    }
 
     @Transactional
-    public Optional<ApiCallRecord> bonusRecord(String userId) {
-        return apiCallRecordRepository.findByUserId(userId)
-                .findFirst()
-                .or(() -> Optional.empty()); // If not found, return Optional.empty()
+    public List<ApiCallRecord> bonusRecord(String userId) {
+        return apiCallRecordRepository.findByUserId(userId);
     }
+
 
     public Integer getTotalAmountByUserId(String userId) {
         return bonusTransactionRepository.getTotalAmountByUserId(userId);
