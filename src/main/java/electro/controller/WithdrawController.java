@@ -30,21 +30,19 @@ public class WithdrawController {
         return "Withdrawal Done!!";
     }
     @GetMapping("/getwithdrawdataByuserId/{userId}")
-    public List<Map<String, Object>> getWithdrawDataByUserId(@PathVariable Long userId) {
+    public List<Map<String, Object>> getWithdrawDataByUserId(@PathVariable Long userId,
+                                                             @RequestHeader(name = "TimeZone", defaultValue = "Asia/Kolkata") String clientTimeZone) {
         List<Withdraw> withdrawData = withdrawService.getWithdrawDataByUserId(userId);
 
-        // Specify the time zone for India (IST)
-        ZoneId indiaTimeZone = ZoneId.of("Asia/Kolkata");
+        ZoneId clientZoneId = ZoneId.of(clientTimeZone);
 
-        // Create a new list to hold the formatted data
         List<Map<String, Object>> formattedWithdrawData = new ArrayList<>();
 
         for (Withdraw withdraw : withdrawData) {
             Map<String, Object> formattedWithdraw = new HashMap<>();
             formattedWithdraw.put("id", withdraw.getId());
 
-            // Convert the LocalDateTime to IST
-            LocalDateTime timestampIST = withdraw.getTimestamp().atZone(indiaTimeZone).toLocalDateTime();
+            LocalDateTime timestampIST = withdraw.getTimestamp().atZone(clientZoneId).toLocalDateTime();
             formattedWithdraw.put("timestamp", timestampIST.format(DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss")));
 
             formattedWithdraw.put("amount", withdraw.getAmount());
@@ -54,6 +52,7 @@ public class WithdrawController {
 
         return formattedWithdrawData;
     }
+
 
 
 
