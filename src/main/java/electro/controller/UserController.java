@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -73,12 +76,16 @@ public class UserController {
 //    }
 
     @GetMapping("/bonusRecord/{userId}")
-    public ResponseEntity<?> bonusRecord(@PathVariable String userId) {
+    public ResponseEntity<?> bonusRecord(@PathVariable String userId,
+                                         @RequestHeader(name = "TimeZone", defaultValue = "Asia/Kolkata") String clientTimeZone) {
         List<ApiCallRecord> apiCallRecords = userService.bonusRecord(userId);
 
         if (!apiCallRecords.isEmpty()) {
-            // Format timestamp using DateTimeFormatter
+            // Define a DateTimeFormatter
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm:ss");
+
+            // Get the ZoneId for the client's time zone
+            ZoneId clientZoneId = ZoneId.of(clientTimeZone);
 
             // Create a new list to hold the formatted data
             List<Map<String, Object>> formattedBonusRecords = new ArrayList<>();
@@ -88,7 +95,11 @@ public class UserController {
                 formattedBonusRecord.put("id", apiCallRecord.getId());
                 formattedBonusRecord.put("userId", apiCallRecord.getUserId());
                 formattedBonusRecord.put("bonusClaimed", apiCallRecord.isBonusClaimed());
-                formattedBonusRecord.put("bonusClaimTime", apiCallRecord.getBonusClaimTime().format(formatter));
+
+                // Convert LocalDateTime to ZonedDateTime and adjust for client's time zone (IST)
+                ZonedDateTime bonusClaimTimeIST = apiCallRecord.getBonusClaimTime().atZone(ZoneOffset.UTC).withZoneSameInstant(clientZoneId);
+                formattedBonusRecord.put("bonusClaimTime", bonusClaimTimeIST.format(formatter));
+
                 formattedBonusRecord.put("bonus", apiCallRecord.getBonus());
                 formattedBonusRecords.add(formattedBonusRecord);
             }
@@ -96,7 +107,6 @@ public class UserController {
             // Create a response map to structure the response
             Map<String, Object> responseMap = new HashMap<>();
             responseMap.put("data", formattedBonusRecords);
-//            responseMap.put("message", "Bonus records fetched successfully.");
 
             return new ResponseEntity<>(responseMap, HttpStatus.OK);
         } else {
@@ -107,6 +117,7 @@ public class UserController {
             return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
         }
     }
+
 
 
     @GetMapping("/totalAmount/{userId}")
