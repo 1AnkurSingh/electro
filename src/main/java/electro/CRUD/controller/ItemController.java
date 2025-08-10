@@ -26,6 +26,11 @@ public class ItemController {
         return ResponseEntity.ok(itemService.readAll());
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> count() {
+        return ResponseEntity.ok(itemService.count());
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<ItemDto> read(@PathVariable Long id) {
         ItemDto dto = itemService.read(id);

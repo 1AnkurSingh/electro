@@ -31,6 +31,10 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
+    public long count() {
+        return itemRepository.count();
+    }
+
     public ItemDto read(Long id) {
         Optional<Item> item = itemRepository.findById(id);
         return item.map(this::toDto).orElse(null);
